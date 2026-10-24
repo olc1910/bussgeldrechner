@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{85B53F06-B610-417E-917A-6DF97D96F82B}</ProjectGuid>
+    <ProjectGuid>{CB836A48-AC3D-CBFF-BB2C-6AEB2D40699A}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>bussgeldrechner</RootNamespace>
     <AssemblyName>bussgeldrechner</AssemblyName>
@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bussgeld.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
