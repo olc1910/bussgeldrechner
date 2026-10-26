@@ -21,7 +21,7 @@ namespace bussgeldrechner
             public int fahrverbot { get; set; }
         }
 
-        public static List<Data> Bussgelddata = new List<Data>(); //O(n) hölle :skull:
+        public static List<Data> Bussgelddata = new List<Data>(20); //O(n) hölle :skull:
         private static int ExceptionCounter = 0;
         private static readonly string path = Path.Combine(AppContext.BaseDirectory, "bussgeldkatalog_geschwindigkeit.csv"); 
         private static readonly HttpClient http = new HttpClient();
@@ -71,7 +71,6 @@ namespace bussgeldrechner
                     RegexOptions.Singleline);
 
                 string Clean(string s) => Regex.Replace(WebUtility.HtmlDecode(s), @"\s+", " ").Trim();
-                var tempList = new List<Data>();
                 foreach (Match m in rx.Matches(html))
                 {
                     string ort = Clean(m.Groups[1].Value);
@@ -93,33 +92,27 @@ namespace bussgeldrechner
                         Strafe = int.Parse(betrag.Replace("€", "")),
                         fahrverbot = (int) char.GetNumericValue(fahrverbot[0])
                     };
-                    tempList.Add(d);
+                    Bussgelddata.Add(d)
                 }
-                Bussgelddata.AddRange(tempList);
                 _ = Task.Run(PopulateLocalTable);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error fetching data from web: {ex.Message}");
                 ExceptionCounter++;
-
-                if (ex is HttpRequestException || ex is TaskCanceledException)
+                Bussgelddata.Clear();
+                
+                if (ExceptionCounter > 3)
                 {
-                    if (ExceptionCounter > 3)
-                    {
-                        Console.WriteLine("Retries all failed, restart the application and/or look at your Network Connection");
-                        return;
-                    }
-                    Console.WriteLine($"Retrying..");
-                    await Task.Delay(1000);
-                    await GetWebData();
-                }
-                else
-                {
+                    Console.WriteLine("Retries all failed, restart the application and/or look at your Network Connection");
                     Console.WriteLine($"Closing programm shortly...");
-                    await Task.Delay(3000);
+                    await Task.Delay(4000);
                     Environment.Exit(-1);
                 }
+                
+                Console.WriteLine($"Retrying..");
+                await Task.Delay(1000);
+                await GetWebData();     
             }
         }
 
