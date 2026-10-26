@@ -12,7 +12,7 @@ namespace bussgeldrechner
         private static int FatalDataException = 0;
         static void Main(string[] args)
         {
-            Console.WriteLine("Bußgeldrechner - programmiert von Jesse Beimgraben");
+            Console.WriteLine("Bußgeldrechner - programmiert von Jesse Beimgraben, Otis Crossley, Jakub Bergmann");
 
             if (!Bussgeld.LoadData())
             {
